@@ -1,0 +1,114 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:context="http://www.springframework.org/schema/context"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:tx="http://www.springframework.org/schema/tx"
+    xmlns:aop="http://www.springframework.org/schema/aop"
+    xsi:schemaLocation="
+        http://www.springframework.org/schema/beans     
+        http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context-4.0.xsd
+        http://www.springframework.org/schema/aop
+        http://www.springframework.org/schema/aop/spring-aop-4.0.xsd
+        http://www.springframework.org/schema/tx
+        http://www.springframework.org/schema/tx/spring-tx-4.0.xsd
+        ">
+      
+    <!-- 加载配置文件jdbc.properties ，在其中保存数据库信息，方便日后维护-->
+    <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="locations">
+            <value>classpath:jdbc.properties</value>
+        </property>
+    </bean>
+    
+    <!-- 配置数据源 -->
+    <bean id="dataSource" destroy-method="close" class="org.apache.commons.dbcp.BasicDataSource">
+        <property name="driverClassName" value="${jdbc.driverClassName}" />
+        <property name="url" value="${jdbc.url}" />
+        <property name="username" value="${jdbc.username}" />
+        <property name="password" value="${jdbc.password}" />     
+    </bean>
+    
+    <!-- 配置c3p0的连接池 -->
+    <!-- <bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
+        <property name="jdbcUrl" value="${jdbcUrl}"/>
+        <property name="driverClass" value="${driverClass}"/>
+        <property name="user" value="${dbuser}"/>
+        <property name="password" value="${password}"/>
+        <property name="initialPoolSize" value="${initialPoolSize}"/>
+        <property name="minPoolSize" value="${minPoolSize}"/>
+        <property name="maxPoolSize" value="${maxPoolSize}"/>
+        <property name="acquireIncrement" value="${acquireIncrement}"/>
+        <property name="maxStatements" value="${maxStatements}"/>
+        <property name="maxStatementsPerConnection" value="${maxStatementsPerConnection}"/>
+        <property name="maxIdleTime" value="${maxIdleTime}"/>
+    </bean> -->
+    
+    
+    <bean id="sessionFactory" class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
+    
+        <!-- 引用数据源 -->
+        <property name="dataSource" ref="dataSource"/>   
+      	<!-- 配置注解形式的实体类，只到包,可以多个 -->
+         <property name="packagesToScan">
+         	<list>
+         		<value>com.yanwu.www.domain</value>
+         	</list>
+         </property>
+         
+
+        <property name="hibernateProperties">
+            <props>
+                <prop key="hibernate.dialect">org.hibernate.dialect.MySQLDialect</prop>
+                <prop key="hibernate.show_sql">true</prop>
+                <prop key="hibernate.format_sql">true</prop>
+                <prop key="hibernate.hbm2ddl.auto">update</prop>
+            </props>
+        </property>
+
+    </bean>
+    
+    
+   <!--  hibernate4 的hibernateTemplate的flushMode必须手动设置成auto，舍弃，最好用session -->
+   <!--  <bean id="hibernateTemplate" class="org.springframework.orm.hibernate4.HibernateTemplate">
+    	<property name="sessionFactory" ref="sessionFactory" />
+    </bean> -->
+ 
+    
+    
+	<!-- 配置自动扫描的包 -->  
+    
+    <context:component-scan base-package="com.yanwu.www.*">
+            <!-- 扫描时跳过 @Controller 注解的JAVA类（控制器） -->
+            <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
+    </context:component-scan>
+        
+    
+     <!-- 配置Spring声明式事务 -->
+    <bean id="transactionManager" class="org.springframework.orm.hibernate4.HibernateTransactionManager">
+        <property name="sessionFactory">
+            <ref bean="sessionFactory"/>
+        </property>
+    </bean>
+    
+     <!-- 配置事务事务属性 -->
+    
+    <tx:advice id="tx" transaction-manager="transactionManager">
+        <tx:attributes>
+            <!-- 方法对应的传播属性 -->    
+            <tx:method name="login*" read-only="false"/>
+            <tx:method name="query*" read-only="false"/>
+            <tx:method name="get*" read-only="false" propagation="REQUIRED"/>
+   			<tx:method name="find*" read-only="false" propagation="REQUIRED"/>
+   			<tx:method name="save*" propagation="REQUIRED"/> 
+   			<tx:method name="update*" propagation="REQUIRED"/>
+   			<tx:method name="delete*" propagation="REQUIRED"/>
+        </tx:attributes>
+    </tx:advice>
+    
+    <!-- 配置事务切点，并把切点和事务属性关联起来,事务控制位置，一般在业务实现层 -->
+    <aop:config proxy-target-class="true">
+        <aop:pointcut expression="execution(* com.yanwu.www.*.*(..))" id="perform"/>
+        <aop:advisor advice-ref="tx" pointcut-ref="perform"/>
+    </aop:config>
+</beans>

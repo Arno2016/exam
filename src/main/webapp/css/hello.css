@@ -1,0 +1,11 @@
+img{
+	width:3rem;
+	display: inline;
+}
+.navbar-brand > img {
+    display: inline;
+}
+.brand{
+	display:inline;
+	float:left;
+}
