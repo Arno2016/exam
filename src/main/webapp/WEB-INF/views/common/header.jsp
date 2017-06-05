@@ -20,7 +20,7 @@
             <li><a href="${ctx}/examPage/selectPaper">在线考试</a></li>
             <li><a href="#contact">成绩查询</a></li>
             <li><a href="${ctx}/updatePassword">修改密码</a></li>
-            <li><a href="#contact">退出系统</a></li>
+            <li><a href="${ctx}/logout">退出系统</a></li>
           </ul>
           <ul class="nav navbar-nav navbar-right">
             <li><a href='<c:if test="${sessionScope.student.name==null}">${ctx}</c:if>
