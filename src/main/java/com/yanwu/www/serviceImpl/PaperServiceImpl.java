@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import com.yanwu.www.dao.PaperDao;
 import com.yanwu.www.domain.Paper;
+import com.yanwu.www.domain.Question;
 import com.yanwu.www.service.PaperService;
 
 @Service
@@ -40,5 +41,8 @@ public class PaperServiceImpl  implements PaperService{
 		// TODO Auto-generated method stub
 		return null;
 	}
+	
+	
+	
 
 }

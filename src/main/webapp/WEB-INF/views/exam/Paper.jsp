@@ -53,7 +53,7 @@
 		<p class="examScoreInfo">(&nbsp;满分120&nbsp;&nbsp;单选题60分&nbsp;&nbsp;多选题60分&nbsp;)</p>
 	</div>
 	<div class="data_exam_content">
-		<form id="myForm" action="exam!add" method="post">
+		<form id="myForm" action="${ctx}/examPage/getExamResult" method="post">
 		<input type="hidden" name="exam.student.id" value="${student.id }"/>
 		<input type="hidden" name="exam.paper.id" value="${paper.id }"/>
 		<strong><big>一，单选题</big></strong>(每题20分，答错不得分)<br/><br/>

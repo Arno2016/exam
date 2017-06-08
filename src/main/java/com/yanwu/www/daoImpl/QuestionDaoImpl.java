@@ -21,7 +21,12 @@ public class QuestionDaoImpl implements QuestionDao {
 
 	public Question getQuestion(String questionId) throws Exception {
 		// TODO Auto-generated method stub
-		return null;
+		Session session=sessionFactory.getCurrentSession();
+		String hql="from Question q where q.id=:id";
+		Query query=session.createQuery(hql);
+		query.setString("id", questionId);
+		Question question=(Question) query.uniqueResult();
+		return question;
 	}
 
 	public List<Question> getQuestions(Question s_question, PageBean pageBean) throws Exception {

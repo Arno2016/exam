@@ -16,7 +16,7 @@
 	function checkForm(){
 		if($("#oldPassword").val()!=null){
 			$.ajax({
-				type:"GET",
+				type:"POST",
 				async:false,
 				url:"${ctx}/login?id=${student.id}&password="+$("#oldPassword").val(),
 				success:function(data,textStatus,request){
@@ -34,7 +34,7 @@
 								
 								//异步提交
 								$.ajax({
-									type:"GET",
+									type:"POST",
 									async:false,
 									url:"${ctx}/updatePassword?newPassword="+$("#newPassword").val(),
 									success:function(){

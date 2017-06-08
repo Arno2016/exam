@@ -16,14 +16,14 @@
 <div class="data_list" style="text-align:center"">
 	<div class="data_content">
 		<form action="${ctx}/paper/paperDetail" method="post" >
-		<label><strong>请选择考试试卷：</strong></label>
-			
-				<select id="paperId" name="paperId">
+		<label style="width:50%"><strong>请选择考试试卷：</strong>
+				<select id="paperId" name="paperId" class="input-md form-control " style="display:inline ! important;width:25%;">
 					<option value="">请选择...</option>
 					<c:forEach var="paper" items="${paperList}">
 						<option value="${paper.id}">${paper.paperName}</option>
 					</c:forEach>
 				</select>
+		</label>
 				<br>
 				<br>
 			<div>

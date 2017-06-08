@@ -10,6 +10,6 @@ import com.yanwu.www.domain.PageBean;
 @Repository
 public interface ExamDao {
 	void saveExam(Exam exam)throws Exception;
-	List<Exam> getExams(Exam s_exam,PageBean pageBean) throws Exception;
+	List<Exam> getExams(String id,PageBean pageBean) throws Exception;
 	int examCount(Exam s_exam)throws Exception;
 }

@@ -45,6 +45,20 @@ public class StudentController {
 				
 	}
 	
+	@RequestMapping("/logout")
+	
+	public String logout(HttpServletRequest request){
+		
+		request.getSession().setAttribute("student", null);
+		
+		mainPage="/WEB-INF/views/loginSuccess.jsp";
+		request.setAttribute("mainPage", mainPage);
+		
+		return "main";
+		
+	}
+	
+	
 	
 	@RequestMapping("/updatePassword")
 	public String updatePassword(HttpServletRequest request,String newPassword,Model model){
