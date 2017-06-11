@@ -8,6 +8,9 @@
  	<script src="${ctx}/js/bootstrap.min.js"></script>
  	<script src="${ctx}/js/popModal.min.js"></script>
  	<link rel="stylesheet" href="${ctx}/css/hello.css"> 
+ 	<script type="text/javascript">
+ 		//写导航栏的激活状态变化
+ 	</script>
 </head>
 
 	<body>
@@ -18,12 +21,17 @@
           <ul class="nav navbar-nav">
             <li class="active"><a href="${ctx}/login?id=${sessionScope.student.id}&password=${sessionScope.student.password}">首页</a></li>
             <li><a href="${ctx}/examPage/selectPaper">在线考试</a></li>
-            <li><a href="#contact">成绩查询</a></li>
+            <li><a href="${ctx}/examPage/examList">成绩查询</a></li>
             <li><a href="${ctx}/updatePassword">修改密码</a></li>
-            <li><a href="#contact">退出系统</a></li>
+            <li><a href="${ctx}/logout">退出系统</a></li>
           </ul>
           <ul class="nav navbar-nav navbar-right">
-            <li><a href="#"><img src="${ctx}/image/home.png" style="display:inline;width:2rem">&nbsp;&nbsp;您好,<c:if test="${sessionScope.student.name==null}">请先登录!</c:if>${sessionScope.student.name}</a></li>
+            <li><a href='<c:if test="${sessionScope.student.name==null}">${ctx}</c:if>
+	            	<c:if test="${sessionScope.student.name!=null}">#</c:if>'>
+	            	<img src="${ctx}/image/home.png" style="display:inline;width:2rem">&nbsp;&nbsp;您好,
+	            	<c:if test="${sessionScope.student.name==null}">请先登录!</c:if>${sessionScope.student.name}
+            	</a>
+            </li>
           </ul>
         </div><!--/.nav-collapse -->
       </div>

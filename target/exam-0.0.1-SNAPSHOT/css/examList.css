@@ -1,0 +1,13 @@
+table{
+	width:90%;
+}
+th {
+	width:10%;
+}
+td,th{
+	padding:10px;
+}
+input{
+	width:70% ! important;
+	display:inline ! important;
+}

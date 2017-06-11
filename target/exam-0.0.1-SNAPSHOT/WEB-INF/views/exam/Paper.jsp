@@ -1,11 +1,12 @@
 <%@ page language="java" contentType="text/html; charset=utf-8"
     pageEncoding="utf-8"%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@include file="/WEB-INF/views/common/taglib.jsp" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-<title>Insert title here</title>
+<title>在线考试</title>
+<link rel="stylesheet" href="${ctx}/css/Paper.css" >
 <script type="text/javascript">
 	var examTime=20*60;
 	var useTime=0,remainTime=examTime;
@@ -52,7 +53,7 @@
 		<p class="examScoreInfo">(&nbsp;满分120&nbsp;&nbsp;单选题60分&nbsp;&nbsp;多选题60分&nbsp;)</p>
 	</div>
 	<div class="data_exam_content">
-		<form id="myForm" action="exam!add" method="post">
+		<form id="myForm" action="${ctx}/examPage/getExamResult" method="post">
 		<input type="hidden" name="exam.student.id" value="${student.id }"/>
 		<input type="hidden" name="exam.paper.id" value="${paper.id }"/>
 		<strong><big>一，单选题</big></strong>(每题20分，答错不得分)<br/><br/>
@@ -77,7 +78,7 @@
 			<br/>
 		</c:forEach>
 		<br/>
-		<strong><big>一，多选题</big></strong>(每题30分，答错不得分)<br/><br/>
+		<strong><big>二，多选题</big></strong>(每题30分，答错不得分)<br/><br/>
 		<c:forEach var="m" items="${mquestionList}" varStatus="status">
 			<strong>[&nbsp;${status.index+1 }&nbsp;]&nbsp;${m.subject }</strong><br/><br/>
 			<label class="checkbox">
