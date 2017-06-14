@@ -1,4 +1,5 @@
 <%@ page language="java" pageEncoding="utf-8"%>
+<%@include file="/WEB-INF/views/common/taglib.jsp" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -16,7 +17,7 @@
 	function checkForm(){
 		if($("#oldPassword").val()!=null){
 			$.ajax({
-				type:"POST",
+				type:"GET",
 				async:false,
 				url:"${ctx}/login?id=${student.id}&password="+$("#oldPassword").val(),
 				success:function(data,textStatus,request){
@@ -26,7 +27,7 @@
 					}else{
 						$("#oldPassword").next("span").css("display","none");
 						//判断新密码是否符合规范
-						if($("#newPassword").val().match(/^[a-zA-Z][a-zA-Z0-9_]{5,20}$/)){
+						if($("#newPassword").val().match(/^[a-zA-Z0-9]{6,20}$/)){
 							$("#errorMsg1").css("display","none");
 							//判断新密码是否相同
 							if($("#newPassword").val()==$("#newPassword2").val()){

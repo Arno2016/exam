@@ -1,6 +1,8 @@
 package com.yanwu.www.daoImpl;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -11,6 +13,7 @@ import org.springframework.stereotype.Repository;
 import com.yanwu.www.dao.ExamDao;
 import com.yanwu.www.domain.Exam;
 import com.yanwu.www.domain.PageBean;
+import com.yanwu.www.domain.Student;
 
 @Repository
 public class ExamDaoImpl implements ExamDao {
@@ -20,20 +23,31 @@ public class ExamDaoImpl implements ExamDao {
 
 	public void saveExam(Exam exam) throws Exception {
 		// TODO Auto-generated method stub
-		
-		
+		Session session =sessionFactory.getCurrentSession();
+		session.save(exam);
 	}
 
-	public List<Exam> getExams(String studentId, PageBean page) throws Exception {
+	public Map getExams(Student student, PageBean page) throws Exception {
 		// TODO Auto-generated method stub
+		Map map=new HashMap();
 		Session session=sessionFactory.getCurrentSession();
-		String hql="from Exam e where e.student.id=:studentId order by e.examDate desc";
-		Query query=session.createQuery(hql);
-		query.setString("studentId", studentId);
+		StringBuffer hql=new StringBuffer();
+		hql.append("from Exam e where 1=1 ");
+		if(!student.getId().isEmpty() && student.getId()!=null && !"".equals(student.getId())){
+			hql.append(" and e.student.id='"+student.getId()+"'");
+		}
+		if(!student.getName().isEmpty()){
+			hql.append(" and e.student.name='"+student.getName()+"'");
+		}
+		hql.append(" order by e.examDate desc");
+		Query query=session.createQuery(hql.toString());
+		page.setCount(query.list().size());
 		query.setFirstResult(page.getStart());
 		query.setMaxResults(page.getPageSize());
 		List<Exam> examList=query.list();
-		return examList;
+		map.put("examList", examList);
+		map.put("page", page);
+		return map;
 	}
 
 	public int examCount(Exam s_exam) throws Exception {

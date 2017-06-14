@@ -1,6 +1,9 @@
 package com.yanwu.www.serviceImpl;
 
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -10,6 +13,7 @@ import com.yanwu.www.dao.QuestionDao;
 import com.yanwu.www.domain.Exam;
 import com.yanwu.www.domain.PageBean;
 import com.yanwu.www.domain.Question;
+import com.yanwu.www.domain.Student;
 import com.yanwu.www.service.ExamService;
 
 @Service
@@ -30,10 +34,11 @@ public class ExamServiceImpl implements ExamService{
 		return null;
 	}
 
-	public List<Exam> getExams(String studentId,PageBean page) throws Exception {
+	public Map getExams(Student student,PageBean page) throws Exception {
 		// TODO Auto-generated method stub
-		List<Exam> examList=examDao.getExams(studentId, page);
-		return examList;
+		Map map=new HashMap();
+		map=examDao.getExams(student, page);
+		return map;
 	}
 
 	public int calScore(String questionId, String userAnswer, String type) throws Exception {
@@ -51,6 +56,15 @@ public class ExamServiceImpl implements ExamService{
 		}else{
 			return 0;
 		}
+	}
+
+	public void saveExam(Exam exam) throws Exception {
+		// TODO Auto-generated method stub
+		
+		exam.setExamDate(new Date());
+		
+		examDao.saveExam(exam);
+		
 	}
 
 }

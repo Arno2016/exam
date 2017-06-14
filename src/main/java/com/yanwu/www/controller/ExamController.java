@@ -1,5 +1,6 @@
 package com.yanwu.www.controller;
 
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -10,13 +11,16 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.yanwu.www.domain.Exam;
 import com.yanwu.www.domain.PageBean;
 import com.yanwu.www.domain.Paper;
+import com.yanwu.www.domain.Student;
 import com.yanwu.www.service.ExamService;
 import com.yanwu.www.service.PaperService;
+import com.yanwu.www.service.StudentService;
 
 @Controller
 @RequestMapping("/examPage")
@@ -29,6 +33,9 @@ public class ExamController {
 	
 	@Autowired
 	private ExamService examService;
+	
+	@Autowired
+	private StudentService studentService;
 	
 	@RequestMapping("/selectPaper")
 	public String selectPaper(HttpServletRequest request,Model model){
@@ -47,22 +54,25 @@ public class ExamController {
 	}
 	
 	@RequestMapping("/getExamResult")
-	public String getExamResult(HttpServletRequest request,Model model){
+	public String getExamResult(HttpServletRequest request,String paperId,Model model) throws Exception{
 		
 		Map map=request.getParameterMap();
 		int totalScore=0;
 		int singleScore=0;
 		int mulScore=0;
+		Paper paper=new Paper();
+		paper=paperService.getPaper(paperId);
 		Iterator<Entry<String, String[]>> it=map.entrySet().iterator();
 		while(it.hasNext()){
 			Entry entry=it.next();
 			String key=(String) entry.getKey();
+			System.out.println(key);
 			String[] values=(String[]) entry.getValue();
 			String value="";
 			if(key.indexOf("-")!=-1){
 				System.out.print(key+"==>");
-				for(String s: values){
-					value+=s+",";
+				for(String ss: values){
+					value+=ss+",";
 				}
 				value=value.substring(0, value.length()-1);
 				if("r".equals(key.split("-")[1])){  //单选
@@ -82,6 +92,7 @@ public class ExamController {
 					}
 				}
 				
+				
 				System.out.print(value);
 				System.out.println();
 			}
@@ -89,6 +100,18 @@ public class ExamController {
 			}
 			
 		totalScore=singleScore+mulScore;
+		Exam exam=new Exam();
+		exam.setStudent((Student) request.getSession().getAttribute("student"));
+		exam.setPaper(paper);
+		exam.setMoreScore(mulScore);
+		exam.setSingleScore(singleScore);
+		exam.setScore(totalScore);
+		try {
+			examService.saveExam(exam);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		model.addAttribute("singleScore", singleScore);
 		model.addAttribute("mulScore", mulScore);
 		model.addAttribute("totalScore", totalScore);
@@ -100,17 +123,17 @@ public class ExamController {
 	
 	
 	@RequestMapping("/examList")
-	public String examList(HttpServletRequest request,PageBean page,Model model){
+	public String examList(HttpServletRequest request,@ModelAttribute("s") Student s,PageBean page,Model model){
+		Map map=new HashMap();
 		page.setPageSize(10);
-		String studentId=request.getParameter("id");
-		List<Exam> examList=null;
+		
 		try {
-			examList= examService.getExams(studentId,page);
+			map= examService.getExams(s,page);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		model.addAttribute("examList", examList);
+		model.addAttribute("map", map);
 		mainPage="/WEB-INF/views/exam/examList.jsp";
 		request.setAttribute("mainPage", mainPage);
 		return "main";

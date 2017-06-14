@@ -54,8 +54,8 @@
 	</div>
 	<div class="data_exam_content">
 		<form id="myForm" action="${ctx}/examPage/getExamResult" method="post">
-		<input type="hidden" name="exam.student.id" value="${student.id }"/>
-		<input type="hidden" name="exam.paper.id" value="${paper.id }"/>
+		<input type="hidden" name="studentId" value="${student.id}"/>
+		<input type="hidden" name="paperId" value="${paper.id}"/>
 		<strong><big>一，单选题</big></strong>(每题20分，答错不得分)<br/><br/>
 		<c:forEach var="s" items="${squestionList}" varStatus="status">
 			<strong>[&nbsp;${status.index+1 }&nbsp;]&nbsp;${s.subject }</strong><br/><br/>

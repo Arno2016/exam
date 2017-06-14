@@ -12,45 +12,28 @@
 	$(document).ready(function(){
 		$("#navbar").find(".active").removeClass("active");
 		$("#navbar").find("a[href$='examList']").parent("li").addClass("active");
-		$('#page').jqPaginator({
-		    totalPages: 10,
-		    visiblePages: 3,
-		    currentPage: 1,
-		    first: '<li class="first"><a href="javascript:void(0);">首页</a></li>',
-		    prev: '<li class="prev"><a href="javascript:void(0);">上一页</a></li>',
-		    next: '<li class="next"><a href="javascript:void(0);">下一页</a></li>',
-		    last: '<li class="last"><a href="javascript:void(0);">末页</a></li>',
-		    page: '<li class="page"><a href="javascript:void(0);">{{page}}</a></li>',
-	 	    onPageChange: function (num, type) {
-		        $('#curPageNum').html('当前第' + num + '页');
-		        $('#curPageNum').val(num);
-		        $("#sname").val();
-		        $.ajax({
-		        	type:"GET",
-		        	url:"${ctx}/examPage/examList",
-		        	data:{
-		        		id:$("#sid").val(),
-		        		curPageNum:$('#curPageNum').val()
-		        	},
-		        	success:function(data){
-		        		alert(data);
-		        		/* $("tbody").html('<c:forEach var="exam" items="${examList}" varStatus="status">'+
-								'<tr>'+
-									'<td>${status.index+1}</td>'+																
-									'<td>${exam.student.id}</td>'+																
-									'<td>${exam.student.name}</td>'+																
-									'<td>${exam.paper.paperName}</td>'+																
-									'<td><fmt:formatDate value="${exam.examDate}" pattern="yyyy-MM-dd" /></td>'+																
-									'<td>${exam.singleScore}</td>'+																
-									'<td>${exam.moreScore}</td>'+																
-									'<td>${exam.score}</td>'+																
-								'</tr>'+
-							'</c:forEach>'); */
-		        	}
-		        });
-		    } 
-		});
+		
 	});
+	
+	
+	
+	
+	function queryResult(){
+		/* $("table").find("tbody").html('<c:forEach var="exam" items="${examList}" varStatus="status">'+
+		'<tr>'+
+			'<td>${status.index+1}</td>'+																
+			'<td>${exam.student.id}</td>'+																
+			'<td>${exam.student.name}</td>'+																
+			'<td>${exam.paper.paperName}</td>'+																
+			'<td><fmt:formatDate value="${exam.examDate}" pattern="yyyy-MM-dd" /></td>'+																
+			'<td>${exam.singleScore}</td>'+																
+			'<td>${exam.moreScore}</td>'+																
+			'<td>${exam.score}</td>'+																
+		'</tr>'+
+	'</c:forEach>'); */
+		
+		$("#myForm").submit();
+	}
 	
 	
 	
@@ -60,16 +43,16 @@
 	<body>
 		<div>
 			<form action="${ctx}/examPage/examList" method="post" id="myForm">
-			<div style="display:none"><input id="curPageNum" name="curPageNum"></div> 
+			<div style="display:none"><input id="curPageNum" name="curPageNum" value="1"></div> 
 				<div class="container">
 								<label for="sid">准考证号:
-									<input id="sid" name="id" class="form-control" placeholder="准考证号" >
+									<input id="sid" name="id" class="form-control" placeholder="准考证号"  value="${s.id}">
 								</label>
 								<label for="sname">姓名：
-									<input id="sname" name="name" class="form-control" placeholder="姓名">
+									<input id="sname" name="name" class="form-control" placeholder="姓名" value="${s.name}">
 								</label>
 								<label style="width:15%">
-									<input type="submit" class="btn btn-primary form-control" value="查询">
+									<input type="submit" class="btn btn-primary form-control" value="查询" >
 								</label>
 								
 				</div>
@@ -91,9 +74,9 @@
 						</tr>
 					</thread>
 					<tbody>
-						<c:forEach var="exam" items="${examList}" varStatus="status">
+						<c:forEach var="exam" items="${map.examList}" varStatus="status">
 								<tr>
-									<td>${status.index1}</td>																
+									<td>${status.index+1}</td>																
 									<td>${exam.student.id}</td>																
 									<td>${exam.student.name}</td>																
 									<td>${exam.paper.paperName}</td>																
@@ -112,4 +95,34 @@
 			
 		</div>
 	</body>
+	<script type="text/javascript">
+	if(${map.examList.size()>0}){
+		if(${map.page.totalPage<3}){
+			visiblePage=${map.page.totalPage};
+		}else{
+			visiblePage=3;
+		}
+		$('#page').jqPaginator({
+			totalPages:${map.page.totalPage},
+		    visiblePages: visiblePage,
+		    currentPage: ${map.page.curPageNum},
+		    first: '<li class="first"><a href="javascript:void(0);">首页</a></li>',
+		    prev: '<li class="prev"><a href="javascript:void(0);">上一页</a></li>',
+		    next: '<li class="next"><a href="javascript:void(0);">下一页</a></li>',
+		    last: '<li class="last"><a href="javascript:void(0);">末页</a></li>',
+		    page: '<li class="page"><a href="javascript:void(0);">{{page}}</a></li>',
+		    onPageChange: function (num, type) {
+		        //$('#curPageNum').html('当前第' + num + '页');
+		        if(num!=${map.page.curPageNum}){
+		        	$('#curPageNum').val(num);
+			        $("#myForm").submit();
+		        }
+		        	 	
+		       
+		       
+		    } 
+		}); 
+	}
+	
+	</script>
 </html>
