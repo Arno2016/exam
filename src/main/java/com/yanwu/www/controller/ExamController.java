@@ -54,14 +54,12 @@ public class ExamController {
 	}
 	
 	@RequestMapping("/getExamResult")
-	public String getExamResult(HttpServletRequest request,String paperId,Model model) throws Exception{
+	public String getExamResult(HttpServletRequest request,Exam exam,Model model) throws Exception{
 		
 		Map map=request.getParameterMap();
 		int totalScore=0;
 		int singleScore=0;
 		int mulScore=0;
-		Paper paper=new Paper();
-		paper=paperService.getPaper(paperId);
 		Iterator<Entry<String, String[]>> it=map.entrySet().iterator();
 		while(it.hasNext()){
 			Entry entry=it.next();
@@ -75,7 +73,7 @@ public class ExamController {
 					value+=ss+",";
 				}
 				value=value.substring(0, value.length()-1);
-				if("r".equals(key.split("-")[1])){  //单选
+				if("r".equals(key.split("-")[1])){  //single choice
 					try {
 						singleScore+=examService.calScore(key.split("-")[2], value, "1");
 					} catch (Exception e) {
@@ -83,7 +81,7 @@ public class ExamController {
 						e.printStackTrace();
 					}
 				}
-				if("c".equals(key.split("-")[1])){  //多选
+				if("c".equals(key.split("-")[1])){  //multiple choice
 					try {
 						mulScore+=examService.calScore(key.split("-")[2], value, "2");
 					} catch (Exception e) {
@@ -100,9 +98,6 @@ public class ExamController {
 			}
 			
 		totalScore=singleScore+mulScore;
-		Exam exam=new Exam();
-		exam.setStudent((Student) request.getSession().getAttribute("student"));
-		exam.setPaper(paper);
 		exam.setMoreScore(mulScore);
 		exam.setSingleScore(singleScore);
 		exam.setScore(totalScore);
