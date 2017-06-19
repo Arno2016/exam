@@ -1,0 +1,8 @@
+table{
+	width:90%;
+	border-collapse:inherit;
+	border-spacing:2rem !important;
+}
+table,th,td{
+	text-align:center;  
+}

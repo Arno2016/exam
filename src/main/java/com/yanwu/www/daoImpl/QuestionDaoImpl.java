@@ -1,6 +1,8 @@
 package com.yanwu.www.daoImpl;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -29,10 +31,20 @@ public class QuestionDaoImpl implements QuestionDao {
 		return question;
 	}
 
-	public List<Question> getQuestions(Question s_question, PageBean pageBean) throws Exception {
+	public Map getQuestions(PageBean page) throws Exception {
 		// TODO Auto-generated method stub
-		
-		return null;
+		Map map=new HashMap();
+		Session session=sessionFactory.getCurrentSession();
+		StringBuffer hql=new StringBuffer();
+		hql.append("from Question q");
+		Query query=session.createQuery(hql.toString());
+		page.setCount(query.list().size());
+		map.put("page", page);
+		query.setFirstResult(page.getStart());
+		query.setMaxResults(page.getPageSize());
+		List<Question> questionList=query.list();
+		map.put("questionList", questionList);
+		return map;
 	}
 
 	public void questionDelete(Question question) throws Exception {

@@ -13,31 +13,7 @@
 		$("#navbar").find(".active").removeClass("active");
 		$("#navbar").find("a[href$='examList']").parent("li").addClass("active");
 		
-	});
-	
-	
-	
-	
-	function queryResult(){
-		/* $("table").find("tbody").html('<c:forEach var="exam" items="${examList}" varStatus="status">'+
-		'<tr>'+
-			'<td>${status.index+1}</td>'+																
-			'<td>${exam.student.id}</td>'+																
-			'<td>${exam.student.name}</td>'+																
-			'<td>${exam.paper.paperName}</td>'+																
-			'<td><fmt:formatDate value="${exam.examDate}" pattern="yyyy-MM-dd" /></td>'+																
-			'<td>${exam.singleScore}</td>'+																
-			'<td>${exam.moreScore}</td>'+																
-			'<td>${exam.score}</td>'+																
-		'</tr>'+
-	'</c:forEach>'); */
-		
-		$("#myForm").submit();
-	}
-	
-	
-	
-	
+	});	
 </script>
 </head>
 	<body>
@@ -45,22 +21,34 @@
 			<form action="${ctx}/examPage/examList" method="post" id="myForm">
 			<div style="display:none"><input id="curPageNum" name="curPageNum" value="1"></div> 
 				<div class="container">
-								<label for="sid">准考证号:
-									<input id="sid" name="id" class="form-control" placeholder="准考证号"  value="${s.id}">
-								</label>
-								<label for="sname">姓名：
-									<input id="sname" name="name" class="form-control" placeholder="姓名" value="${s.name}">
-								</label>
-								<label style="width:15%">
-									<input type="submit" class="btn btn-primary form-control" value="查询" >
-								</label>
+					<c:choose>
+						<c:when test="${student.flag=='1'}">
+							<label for="sid">准考证号:
+										<input id="sid" name="id" class="form-control" placeholder="准考证号"  value="${s.id}">
+									</label>
+									<label for="sname">姓名：
+										<input id="sname" name="name" class="form-control" placeholder="姓名" value="${s.name}">
+									</label>
+									<label style="width:15%">
+										<input type="submit" class="btn btn-primary form-control" value="查询" >
+									</label>
+						</c:when>
+						<c:otherwise>
+							<div class="">
+								<p>${student.name }&nbsp;成绩列表</p>
+								<input type="hidden" id="sid" name="id" class="form-control" placeholder="准考证号"  value="${student.id}">
+								<input type="hidden" id="sname" name="name" class="form-control" placeholder="姓名" value="${student.name}">
+							</div>
+						</c:otherwise>
+					</c:choose>
+								
 								
 				</div>
 			</form>	
 			<div>
 			<br>
 			<br>
-				<table align="center">
+				<table align="center" class="table table-bordered table-hover">
 					<thread>
 						<tr>
 							<th>序号</th>
@@ -90,7 +78,7 @@
 				</table>
 			</div>	
 			<div>
-                <ul id="page" class="pagination pagination-centered"></ul>
+                <ul id="page" style="float:right;" class="pagination pagination-centered"></ul>
             </div>
 			
 		</div>

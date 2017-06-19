@@ -23,18 +23,6 @@ public class PaperController {
 	@Autowired
 	private PaperService paperService;
 	
-	@RequestMapping("/paperList")
-	public String paperList(){
-		
-		try {
-			paperService.getPapers();
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return null;
-	}
-	
 	@RequestMapping("/paperDetail")
 	public String paperDetail(HttpServletRequest request,String paperId,Model model){
 		List<Question> squestionList=new ArrayList<Question>();
@@ -62,6 +50,30 @@ public class PaperController {
 		return "main";
 		
 	}
+	
+	@RequestMapping("/paperList")
+	public String paperList(HttpServletRequest request,Model model){
+		List<Paper> paperList=new ArrayList<Paper>();
+		try {
+			paperList=paperService.getPapers();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		model.addAttribute("paperList", paperList);
+		mainPage="/WEB-INF/views/paper/paperList.jsp";
+		request.setAttribute("mainPage", mainPage);
+		return "main";
+	}
+	
+	@RequestMapping("/paperSave")
+	public String paperSave(HttpServletRequest request,Paper paper){
+		mainPage="/WEB-INF/views/paper/paperSave.jsp";
+		request.setAttribute("mainPage", mainPage);
+		return "main";
+	}
+	
+	
 	
 	
 }

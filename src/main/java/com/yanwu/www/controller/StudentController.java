@@ -29,6 +29,9 @@ public class StudentController {
 	public String login(HttpServletRequest request,HttpServletResponse response,Student student,String inputCode, Model model){
 		Map<String, String> map=new HashMap<String, String>();
 		Student s=studentService.login(student);
+		if(s!=null && "00000".equals(s.getId())){
+			s.setFlag("1");
+		}
 		request.getSession().setAttribute("student", s);
 			if(s!=null){
 				request.getSession().removeAttribute("code");

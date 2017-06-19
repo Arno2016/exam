@@ -19,11 +19,21 @@
         <div class="brand"><a class="navbar-brand" href="#"><img alt="" src="${ctx}/image/exam.png">在线考试系统</a></div>
         <div id="navbar" class="navbar-collapse collapse">
           <ul class="nav navbar-nav">
-            <li class="active"><a href="${ctx}/login?id=${sessionScope.student.id}&password=${sessionScope.student.password}">首页</a></li>
-            <li><a href="${ctx}/examPage/selectPaper">在线考试</a></li>
-            <li><a href="${ctx}/examPage/examList">成绩查询</a></li>
-            <li><a href="${ctx}/updatePassword">修改密码</a></li>
-            <li><a href="${ctx}/logout">退出系统</a></li>
+          	<li class="active"><a href="${ctx}/login?id=${sessionScope.student.id}&password=${sessionScope.student.password}">首页</a></li>
+          	<c:choose>
+	          	<c:when test="${sessionScope.student.flag=='1'}">
+			      	  <li><a href="#">考生信息管理</a></li>
+				      <li><a href="${ctx}/examPage/examList">考生成绩查询</a></li>
+				      <li><a href="${ctx}/paper/paperList">试卷管理</a></li>
+				      <li><a href="${ctx}/question/questionList?curPageNum=1">题目管理</a></li>
+	      		</c:when>
+	          	<c:otherwise>
+		            <li><a href="${ctx}/examPage/selectPaper">在线考试</a></li>
+		            <li><a href="${ctx}/examPage/examList?id=${sessionScope.student.id}&curPageNum=1&name=${sessionScope.student.name}">我的成绩</a></li>
+		            <li><a href="${ctx}/updatePassword">修改密码</a></li>
+	          	</c:otherwise>
+	          </c:choose>
+	          <li><a href="${ctx}/logout">退出系统</a></li>
           </ul>
           <ul class="nav navbar-nav navbar-right">
             <li><a href='<c:if test="${sessionScope.student.name==null}">${ctx}</c:if>
